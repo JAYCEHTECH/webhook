@@ -29,8 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "plankton-app-s46li.ondigitalocean.app",
-    'merchant-nz2nc.ondigitalocean.app',
-    'merchant.cloudhubgh.com',
+    'three-g-gyasi-webhook-flutter-odxdg.ondigitalocean.app',
+    'webhook.cloudhubgh.com',
     'localhost',
     '127.0.0.1'
 ]
