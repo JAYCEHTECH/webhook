@@ -29,8 +29,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db, firestore
 
-from business_api.models import MTNTransaction
-
 if not firebase_admin._apps:
     cred = credentials.Certificate(settings.FIREBASE_ADMIN_CERT)
     firebase_admin.initialize_app(cred, {
