@@ -1862,6 +1862,7 @@ def paystack_webhook(request):
         paystack_signature = request.headers.get("X-Paystack-Signature")
 
         if not paystack_secret_key or not paystack_signature:
+
             return HttpResponse(status=400)
 
         computed_signature = hmac.new(
@@ -1904,7 +1905,7 @@ def paystack_webhook(request):
                     first_name = ""
                     email = ""
 
-                if models.Transaction.objects.first(reference=reference, transaction_type=channel).exists():
+                if models.Transaction.objects.filter(reference=reference, transaction_type=channel).exists():
                     return HttpResponse(status=200)
                 else:
                     new_transaction = models.Transaction.objects.create(

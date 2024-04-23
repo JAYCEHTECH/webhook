@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField()
 
 
-class Transaction (models.Model):
+class Transaction(models.Model):
     reference = models.CharField(max_length=250, null=True, blank=True)
     choices = (
         ("ishare", "ishare"),
