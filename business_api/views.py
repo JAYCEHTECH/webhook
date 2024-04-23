@@ -2179,6 +2179,7 @@ def paystack_webhook(request):
             else:
                 return HttpResponse(status=200)
         else:
-            return HttpResponse(status=200)
+            return HttpResponse(status=401)
     else:
+        print("yayyyyyyyyyyyy")
         return HttpResponse(status=200)
