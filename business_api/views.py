@@ -309,27 +309,27 @@ def big_time_transaction(receiver, date, time, date_and_time, phone, amount, dat
     except:
         user_collection.document(user_id).update({'bt_total_sales': amount})
 
-    tat = cashback_collection.document(user_id)
-    print(tat.get().to_dict())
-
-    try:
-        previous_cashback = tat.get().to_dict()['cashback_wallet']
-        print(previous_cashback)
-        cashback_balance = (0.5 / 100) * float(amount)
-        print(cashback_balance)
-        new_cashback = float(previous_cashback) + float(cashback_balance)
-        print(new_cashback)
-        cashback_collection.document(user_id).update(
-            {'cashback_wallet': new_cashback, 'phone_number': phone})
-    except TypeError as e:
-        print(e)
-        cashback_balance = (0.5 / 100) * float(amount)
-        print(cashback_balance)
-        cashback_collection.document(user_id).set(
-            {'cashback_wallet': cashback_balance, 'phone_number': phone})
-
-        print(cashback_collection.document(user_id).get().to_dict())
-        print("did")
+    # tat = cashback_collection.document(user_id)
+    # print(tat.get().to_dict())
+    #
+    # try:
+    #     previous_cashback = tat.get().to_dict()['cashback_wallet']
+    #     print(previous_cashback)
+    #     cashback_balance = (0.5 / 100) * float(amount)
+    #     print(cashback_balance)
+    #     new_cashback = float(previous_cashback) + float(cashback_balance)
+    #     print(new_cashback)
+    #     cashback_collection.document(user_id).update(
+    #         {'cashback_wallet': new_cashback, 'phone_number': phone})
+    # except TypeError as e:
+    #     print(e)
+    #     cashback_balance = (0.5 / 100) * float(amount)
+    #     print(cashback_balance)
+    #     cashback_collection.document(user_id).set(
+    #         {'cashback_wallet': cashback_balance, 'phone_number': phone})
+    #
+    #     print(cashback_collection.document(user_id).get().to_dict())
+    #     print("did")
 
     # previous_big_time_totals = totals_collection.document('BIGTIME TOTALS')
     # all_totals = totals_collection.document('ALL TOTALS')
@@ -2008,28 +2008,28 @@ def paystack_webhook(request):
                             except:
                                 user_collection.document(user_id).update({'at_total_sales': amount})
 
-                            tat = cashback_collection.document(user_id)
-                            print(tat.get().to_dict())
-
-                            try:
-                                previous_cashback = tat.get().to_dict()['cashback_wallet']
-                                print(previous_cashback)
-                                cashback_balance = (0.5 / 100) * float(amount)
-                                print(cashback_balance)
-                                new_cashback = float(previous_cashback) + float(cashback_balance)
-                                print(new_cashback)
-                                cashback_collection.document(user_id).update(
-                                    {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
-
-                            except TypeError as e:
-                                print(e)
-                                cashback_balance = (0.5 / 100) * float(amount)
-                                print(cashback_balance)
-                                cashback_collection.document(user_id).set(
-                                    {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
-
-                                print(cashback_collection.document(user_id).get().to_dict())
-                                print("did")
+                            # tat = cashback_collection.document(user_id)
+                            # print(tat.get().to_dict())
+                            #
+                            # try:
+                            #     previous_cashback = tat.get().to_dict()['cashback_wallet']
+                            #     print(previous_cashback)
+                            #     cashback_balance = (0.5 / 100) * float(amount)
+                            #     print(cashback_balance)
+                            #     new_cashback = float(previous_cashback) + float(cashback_balance)
+                            #     print(new_cashback)
+                            #     cashback_collection.document(user_id).update(
+                            #         {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
+                            #
+                            # except TypeError as e:
+                            #     print(e)
+                            #     cashback_balance = (0.5 / 100) * float(amount)
+                            #     print(cashback_balance)
+                            #     cashback_collection.document(user_id).set(
+                            #         {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
+                            #
+                            #     print(cashback_collection.document(user_id).get().to_dict())
+                            #     print("did")
 
                             name = first_name
                             volume = bundle_package
@@ -2104,28 +2104,28 @@ def paystack_webhook(request):
                         except:
                             user_collection.document(user_id).update({'mtn_total_sales': amount})
 
-                        tat = cashback_collection.document(user_id)
-                        print(tat.get().to_dict())
-
-                        try:
-                            previous_cashback = tat.get().to_dict()['cashback_wallet']
-                            print(previous_cashback)
-                            cashback_balance = (0.5 / 100) * float(amount)
-                            print(cashback_balance)
-                            new_cashback = float(previous_cashback) + float(cashback_balance)
-                            print(new_cashback)
-                            cashback_collection.document(user_id).update(
-                                {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
-
-                        except TypeError as e:
-                            print(e)
-                            cashback_balance = (0.5 / 100) * float(amount)
-                            print(cashback_balance)
-                            cashback_collection.document(user_id).set(
-                                {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
-
-                            print(cashback_collection.document(user_id).get().to_dict())
-                            print("did")
+                        # tat = cashback_collection.document(user_id)
+                        # print(tat.get().to_dict())
+                        #
+                        # try:
+                        #     previous_cashback = tat.get().to_dict()['cashback_wallet']
+                        #     print(previous_cashback)
+                        #     cashback_balance = (0.5 / 100) * float(amount)
+                        #     print(cashback_balance)
+                        #     new_cashback = float(previous_cashback) + float(cashback_balance)
+                        #     print(new_cashback)
+                        #     cashback_collection.document(user_id).update(
+                        #         {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
+                        #
+                        # except TypeError as e:
+                        #     print(e)
+                        #     cashback_balance = (0.5 / 100) * float(amount)
+                        #     print(cashback_balance)
+                        #     cashback_collection.document(user_id).set(
+                        #         {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
+                        #
+                        #     print(cashback_collection.document(user_id).get().to_dict())
+                        #     print("did")
                         return HttpResponse(status=200)
                     else:
                         return HttpResponse(status=200)
