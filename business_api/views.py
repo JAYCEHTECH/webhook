@@ -297,6 +297,40 @@ def big_time_transaction(receiver, date, time, date_and_time, phone, amount, dat
     reference_t = ref
     receiver_t = receiver
 
+    tot = user_collection.document(user_id)
+    print(tot.get().to_dict())
+    try:
+        print(tot.get().to_dict()['bt_total_sales'])
+        previous_sale = tot.get().to_dict()['bt_total_sales']
+        print(f"Previous Sale: {previous_sale}")
+        new_sale = float(previous_sale) + float(amount)
+        print(new_sale)
+        user_collection.document(user_id).update({'bt_total_sales': new_sale})
+    except:
+        user_collection.document(user_id).update({'bt_total_sales': amount})
+
+    tat = cashback_collection.document(user_id)
+    print(tat.get().to_dict())
+
+    try:
+        previous_cashback = tat.get().to_dict()['cashback_wallet']
+        print(previous_cashback)
+        cashback_balance = (0.5 / 100) * float(amount)
+        print(cashback_balance)
+        new_cashback = float(previous_cashback) + float(cashback_balance)
+        print(new_cashback)
+        cashback_collection.document(user_id).update(
+            {'cashback_wallet': new_cashback, 'phone_number': phone})
+    except TypeError as e:
+        print(e)
+        cashback_balance = (0.5 / 100) * float(amount)
+        print(cashback_balance)
+        cashback_collection.document(user_id).set(
+            {'cashback_wallet': cashback_balance, 'phone_number': phone})
+
+        print(cashback_collection.document(user_id).get().to_dict())
+        print("did")
+
     # previous_big_time_totals = totals_collection.document('BIGTIME TOTALS')
     # all_totals = totals_collection.document('ALL TOTALS')
     # doc = previous_big_time_totals.get()
@@ -1962,6 +1996,41 @@ def paystack_webhook(request):
                             mail_doc_ref = mail_collection.document(f"{batch_id}-Mail")
                             file_path = 'business_api/mail.txt'  # Replace with your file path
 
+                            tot = user_collection.document(user_id)
+                            print(tot.get().to_dict())
+                            try:
+                                print(tot.get().to_dict()['at_total_sales'])
+                                previous_sale = tot.get().to_dict()['at_total_sales']
+                                print(f"Previous Sale: {previous_sale}")
+                                new_sale = float(previous_sale) + float(amount)
+                                print(new_sale)
+                                user_collection.document(user_id).update({'at_total_sales': new_sale})
+                            except:
+                                user_collection.document(user_id).update({'at_total_sales': amount})
+
+                            tat = cashback_collection.document(user_id)
+                            print(tat.get().to_dict())
+
+                            try:
+                                previous_cashback = tat.get().to_dict()['cashback_wallet']
+                                print(previous_cashback)
+                                cashback_balance = (0.5 / 100) * float(amount)
+                                print(cashback_balance)
+                                new_cashback = float(previous_cashback) + float(cashback_balance)
+                                print(new_cashback)
+                                cashback_collection.document(user_id).update(
+                                    {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
+
+                            except TypeError as e:
+                                print(e)
+                                cashback_balance = (0.5 / 100) * float(amount)
+                                print(cashback_balance)
+                                cashback_collection.document(user_id).set(
+                                    {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
+
+                                print(cashback_collection.document(user_id).get().to_dict())
+                                print("did")
+
                             name = first_name
                             volume = bundle_package
                             date = date_and_time
@@ -2022,6 +2091,41 @@ def paystack_webhook(request):
                     if mtn_response.status_code == 200 or mtn_response.data["code"] == "0000":
                         print("mtn donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print("yooo")
+
+                        tot = user_collection.document(user_id)
+                        print(tot.get().to_dict())
+                        try:
+                            print(tot.get().to_dict()['mtn_total_sales'])
+                            previous_sale = tot.get().to_dict()['mtn_total_sales']
+                            print(f"Previous Sale: {previous_sale}")
+                            new_sale = float(previous_sale) + float(amount)
+                            print(new_sale)
+                            user_collection.document(user_id).update({'mtn_total_sales': new_sale})
+                        except:
+                            user_collection.document(user_id).update({'mtn_total_sales': amount})
+
+                        tat = cashback_collection.document(user_id)
+                        print(tat.get().to_dict())
+
+                        try:
+                            previous_cashback = tat.get().to_dict()['cashback_wallet']
+                            print(previous_cashback)
+                            cashback_balance = (0.5 / 100) * float(amount)
+                            print(cashback_balance)
+                            new_cashback = float(previous_cashback) + float(cashback_balance)
+                            print(new_cashback)
+                            cashback_collection.document(user_id).update(
+                                {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
+
+                        except TypeError as e:
+                            print(e)
+                            cashback_balance = (0.5 / 100) * float(amount)
+                            print(cashback_balance)
+                            cashback_collection.document(user_id).set(
+                                {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
+
+                            print(cashback_collection.document(user_id).get().to_dict())
+                            print("did")
                         return HttpResponse(status=200)
                     else:
                         return HttpResponse(status=200)
