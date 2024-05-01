@@ -297,17 +297,17 @@ def big_time_transaction(receiver, date, time, date_and_time, phone, amount, dat
     reference_t = ref
     receiver_t = receiver
 
-    tot = user_collection.document(user_id)
-    print(tot.get().to_dict())
-    try:
-        print(tot.get().to_dict()['bt_total_sales'])
-        previous_sale = tot.get().to_dict()['bt_total_sales']
-        print(f"Previous Sale: {previous_sale}")
-        new_sale = float(previous_sale) + float(amount)
-        print(new_sale)
-        user_collection.document(user_id).update({'bt_total_sales': new_sale})
-    except:
-        user_collection.document(user_id).update({'bt_total_sales': amount})
+    # tot = user_collection.document(user_id)
+    # print(tot.get().to_dict())
+    # try:
+    #     print(tot.get().to_dict()['bt_total_sales'])
+    #     previous_sale = tot.get().to_dict()['bt_total_sales']
+    #     print(f"Previous Sale: {previous_sale}")
+    #     new_sale = float(previous_sale) + float(amount)
+    #     print(new_sale)
+    #     user_collection.document(user_id).update({'bt_total_sales': new_sale})
+    # except:
+    #     user_collection.document(user_id).update({'bt_total_sales': amount})
 
     # tat = cashback_collection.document(user_id)
     # print(tat.get().to_dict())
@@ -1921,6 +1921,7 @@ def paystack_webhook(request):
                 print(real_amount)
                 paid_amount = float(r_data.get('amount')) / 100
                 amount = real_amount
+                print(f"amountttttttttttttttttttttttttt = {real_amount}")
                 email = r_data.get('email')
                 reference = r_data.get('reference')
                 date = metadata.get("date")
@@ -1996,17 +1997,17 @@ def paystack_webhook(request):
                             mail_doc_ref = mail_collection.document(f"{batch_id}-Mail")
                             file_path = 'business_api/mail.txt'  # Replace with your file path
 
-                            tot = user_collection.document(user_id)
-                            print(tot.get().to_dict())
-                            try:
-                                print(tot.get().to_dict()['at_total_sales'])
-                                previous_sale = tot.get().to_dict()['at_total_sales']
-                                print(f"Previous Sale: {previous_sale}")
-                                new_sale = float(previous_sale) + float(amount)
-                                print(new_sale)
-                                user_collection.document(user_id).update({'at_total_sales': new_sale})
-                            except:
-                                user_collection.document(user_id).update({'at_total_sales': amount})
+                            # tot = user_collection.document(user_id)
+                            # print(tot.get().to_dict())
+                            # try:
+                            #     print(tot.get().to_dict()['at_total_sales'])
+                            #     previous_sale = tot.get().to_dict()['at_total_sales']
+                            #     print(f"Previous Sale: {previous_sale}")
+                            #     new_sale = float(previous_sale) + float(amount)
+                            #     print(new_sale)
+                            #     user_collection.document(user_id).update({'at_total_sales': new_sale})
+                            # except:
+                            #     user_collection.document(user_id).update({'at_total_sales': amount})
 
                             # tat = cashback_collection.document(user_id)
                             # print(tat.get().to_dict())
@@ -2091,18 +2092,18 @@ def paystack_webhook(request):
                     if mtn_response.status_code == 200 or mtn_response.data["code"] == "0000":
                         print("mtn donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print("yooo")
-
-                        tot = user_collection.document(user_id)
-                        print(tot.get().to_dict())
-                        try:
-                            print(tot.get().to_dict()['mtn_total_sales'])
-                            previous_sale = tot.get().to_dict()['mtn_total_sales']
-                            print(f"Previous Sale: {previous_sale}")
-                            new_sale = float(previous_sale) + float(amount)
-                            print(new_sale)
-                            user_collection.document(user_id).update({'mtn_total_sales': new_sale})
-                        except:
-                            user_collection.document(user_id).update({'mtn_total_sales': amount})
+                        #
+                        # tot = user_collection.document(user_id)
+                        # print(tot.get().to_dict())
+                        # try:
+                        #     print(tot.get().to_dict()['mtn_total_sales'])
+                        #     previous_sale = tot.get().to_dict()['mtn_total_sales']
+                        #     print(f"Previous Sale: {previous_sale}")
+                        #     new_sale = float(previous_sale) + float(amount)
+                        #     print(new_sale)
+                        #     user_collection.document(user_id).update({'mtn_total_sales': new_sale})
+                        # except:
+                        #     user_collection.document(user_id).update({'mtn_total_sales': amount})
 
                         # tat = cashback_collection.document(user_id)
                         # print(tat.get().to_dict())
