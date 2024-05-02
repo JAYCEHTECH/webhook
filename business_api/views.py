@@ -255,8 +255,27 @@ def send_and_save_to_history(user_id,
 
 def big_time_transaction(receiver, date, time, date_and_time, phone, amount, data_volume, details: dict, ref,
                          channel, txn_status, user_id):
+    amount = round(float(amount))
     print("==========")
     print(amount)
+
+    prices_dict = {
+        80: 30000,
+        100: 40000,
+        120: 50000,
+        200: 80000,
+        230: 100000,
+        450: 200000,
+        1125: 500000,
+        2250: 1000000,
+    }
+
+    try:
+        data_volume = prices_dict[amount]
+    except:
+        print("key error")
+        return HttpResponse(status=200)
+
     data = {
         'batch_id': "unknown",
         'buyer': phone,
@@ -1719,6 +1738,35 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
     email = user_details['email']
     phone = user_details['phone']
 
+    amount = round(float(amount))
+
+    prices_dict = {
+        3: 1000,
+        6: 2000,
+        9: 3000,
+        12: 4000,
+        15: 5000,
+        17: 6000,
+        20: 7000,
+        23: 8000,
+        26: 9000,
+        29: 10000,
+        35: 12000,
+        44: 15000,
+        58: 20000,
+        73: 25000,
+        87: 30000,
+        116: 40000,
+        145: 50000,
+        290: 100000,
+    }
+
+    try:
+        data_volume = prices_dict[round(float(amount))]
+    except:
+        print("key errrrrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+        return HttpResponse(status=200)
+
     doc_ref = history_web.collection(email).document(date_and_time)
 
     print("moving on")
@@ -1781,13 +1829,40 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
 
 def mtn_flexi_transaction(receiver, date, time, date_and_time, phone, amount, data_volume, details: dict, ref,
                           channel, txn_status):
+    print(f"amounttttttttttttttttttt that came innnnnnnnnnnnnnnn: {amount}")
+    amount = round(amount)
+    prices_dict = {
+        4: 1000,
+        8: 2000,
+        11: 3000,
+        15: 4000,
+        18: 5000,
+        21: 6000,
+        25: 7000,
+        27: 8000,
+        32: 10000,
+        48: 15000,
+        64: 20000,
+        78: 25000,
+        94: 30000,
+        128: 40000,
+        155: 50000,
+        290: 100000,
+    }
+
+    try:
+        look = prices_dict[float(amount)]
+        print(f"looooooooooooooooooooooooooooooooooooook: {look}")
+    except:
+        return Response(data={'code': '0000', 'message': "Transaction Saved"}, status=status.HTTP_200_OK)
+
     data = {
         'batch_id': "unknown",
         'buyer': phone,
         'color_code': "Green",
         'amount': amount,
-        'data_break_down': str(data_volume),
-        'data_volume': data_volume,
+        'data_break_down': str(prices_dict[float(amount)]),
+        'data_volume': prices_dict[float(amount)],
         'date': date,
         'date_and_time': date_and_time,
         'done': "unknown",
