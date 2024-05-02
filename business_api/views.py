@@ -1752,7 +1752,7 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
         26: 9000,
         29: 10000,
         35: 12000,
-        44: 15000,
+        43: 15000,
         58: 20000,
         73: 25000,
         87: 30000,
@@ -1763,6 +1763,7 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
 
     try:
         data_volume = prices_dict[round(float(amount))]
+        print(f"data voluuuuuuuuuummmmmmmmmmmmmmmmmmeeee: {data_volume}")
     except:
         print("key errrrrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
         return HttpResponse(status=200)
