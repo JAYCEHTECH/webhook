@@ -2017,8 +2017,9 @@ def paystack_webhook(request):
 
                 percentage_added = percentage * float(paid_amount)
                 amount = round(float(paid_amount) - percentage_added)
+                print(f"without percentage ===================== {amount}")
                 # amount = real_amount
-                print(f"amountttttttttttttttttttttttttt = {real_amount}")
+                print(f"reaaaaaaaaalllllllllll amountttttttttttttttttttttttttt = {real_amount}")
                 email = r_data.get('email')
                 reference = r_data.get('reference')
                 date = metadata.get("date")
