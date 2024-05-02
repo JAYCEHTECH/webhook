@@ -1890,7 +1890,6 @@ def paystack_webhook(request):
     if request.method == "POST":
         print("posted")
         paystack_secret_key = config("PAYSTACK_SECRET_KEY")
-        print(paystack_secret_key)
         payload = json.loads(request.body)
 
         paystack_signature = request.headers.get("X-Paystack-Signature")
@@ -1918,6 +1917,19 @@ def paystack_webhook(request):
                 channel = metadata.get('channel')
                 user_id = metadata.get('user_id')
                 real_amount = metadata.get('real_amount')
+                referrer = metadata.get('referrer')
+                print(f"{referrer} - urrrrrrrrrrrrrrrrrrrrrrrlllllllllllllllllllllllllllllllllllllllllllllllll")
+                from urllib.parse import urlparse
+
+                url = str(referrer)
+                parsed_url = urlparse(url)
+                base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+                print(base_url)
+
+                if base_url != "https://reseller.cloudhubgh.com":
+                    print("was not correct referrerrrrrrrrrrrrrrrrrrrrrr")
+                    return HttpResponse(status=200)
+
                 print(real_amount)
                 paid_amount = float(r_data.get('amount')) / 100
                 amount = real_amount
