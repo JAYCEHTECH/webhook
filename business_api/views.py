@@ -1921,6 +1921,10 @@ def paystack_webhook(request):
                 print(f"{referrer} - urrrrrrrrrrrrrrrrrrrrrrrlllllllllllllllllllllllllllllllllllllllllllllllll")
                 from urllib.parse import urlparse
 
+                if float(real_amount) > 3000:
+                    print("amount is over 3000. whyyyyyyyyyyyyyyyyyyyyyyyyyy????????????")
+                    return HttpResponse(status=200)
+
                 url = str(referrer)
                 parsed_url = urlparse(url)
                 base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
