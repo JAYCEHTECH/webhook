@@ -1895,8 +1895,7 @@ def paystack_webhook(request):
         paystack_signature = request.headers.get("X-Paystack-Signature")
 
         if not paystack_secret_key or not paystack_signature:
-
-            return HttpResponse(status=400)
+            return HttpResponse(status=200)
 
         computed_signature = hmac.new(
             paystack_secret_key.encode('utf-8'),
@@ -1936,7 +1935,14 @@ def paystack_webhook(request):
 
                 print(real_amount)
                 paid_amount = float(r_data.get('amount')) / 100
-                amount = real_amount
+                if channel == "top_up":
+                    percentage = 0.03
+                else:
+                    percentage = 0.04
+
+                percentage_added = percentage * float(paid_amount)
+                amount = round(float(paid_amount) - percentage_added)
+                # amount = real_amount
                 print(f"amountttttttttttttttttttttttttt = {real_amount}")
                 email = r_data.get('email')
                 reference = r_data.get('reference')
