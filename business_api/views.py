@@ -1929,9 +1929,9 @@ def paystack_webhook(request):
                 base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
                 print(base_url)
 
-                if base_url != "https://reseller.cloudhubgh.com":
-                    print("was not correct referrerrrrrrrrrrrrrrrrrrrrrr")
-                    return HttpResponse(status=200)
+                # if base_url != "https://reseller.cloudhubgh.com":
+                #     print("was not correct referrerrrrrrrrrrrrrrrrrrrrrr")
+                #     return HttpResponse(status=200)
 
                 print(real_amount)
                 paid_amount = float(r_data.get('amount')) / 100
