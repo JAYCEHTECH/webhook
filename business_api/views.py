@@ -1839,7 +1839,7 @@ def mtn_flexi_transaction(receiver, date, time, date_and_time, phone, amount, da
         15: 4000,
         18: 5000,
         21: 6000,
-        25: 7000,
+        24: 7000,
         27: 8000,
         32: 10000,
         48: 15000,
