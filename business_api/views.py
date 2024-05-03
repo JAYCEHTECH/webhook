@@ -1754,7 +1754,7 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
         35: 12000,
         43: 15000,
         58: 20000,
-        73: 25000,
+        74: 25000,
         87: 30000,
         116: 40000,
         145: 50000,
