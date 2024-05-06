@@ -259,37 +259,8 @@ def big_time_transaction(receiver, date, time, date_and_time, phone, amount, dat
     print("==========")
     print(amount)
 
-    prices_dict = {
-        79: 30000,
-        80: 30000,
-        98: 40000,
-        99: 40000,
-        100: 40000,
-        101: 40000,
-        118: 50000,
-        119: 50000,
-        120: 50000,
-        197: 80000,
-        198: 80000,
-        199: 80000,
-        200: 80000,
-        228: 100000,
-        229: 100000,
-        230: 100000,
-        231: 100000,
-        448: 200000,
-        449: 200000,
-        450: 200000,
-        1123: 500000,
-        1124: 500000,
-        1125: 500000,
-        2248: 1000000,
-        2249: 1000000,
-        2250: 1000000,
-    }
-
     try:
-        data_volume = prices_dict[round(float(amount))]
+        data_volume = data_volume
     except:
         print("key error")
         return HttpResponse(status=200)
@@ -1756,65 +1727,8 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
     email = user_details['email']
     phone = user_details['phone']
 
-    amount = round(float(amount))
-
-    prices_dict = {
-        3: 1000,
-        4: 1000,
-        6: 2000,
-        7: 2000,
-        8: 3000,
-        9: 3000,
-        10: 3000,
-        11: 4000,
-        12: 4000,
-        13: 4000,
-        14: 5000,
-        15: 5000,
-        16: 6000,
-        17: 6000,
-        18: 6000,
-        19: 7000,
-        20: 7000,
-        21: 7000,
-        22: 8000,
-        23: 8000,
-        24: 8000,
-        25: 9000,
-        26: 9000,
-        27: 9000,
-        28: 10000,
-        29: 10000,
-        30: 10000,
-        34: 12000,
-        35: 12000,
-        36: 12000,
-        42: 15000,
-        43: 15000,
-        44: 15000,
-        57: 20000,
-        58: 20000,
-        59: 20000,
-        73: 25000,
-        74: 25000,
-        75: 25000,
-        76: 25000,
-        86: 30000,
-        87: 30000,
-        88: 30000,
-        115: 40000,
-        116: 40000,
-        117: 40000,
-        144: 50000,
-        145: 50000,
-        150: 50000,
-        289: 100000,
-        290: 100000,
-        300: 100000,
-    }
-
     try:
-        data_volume = prices_dict[round(float(amount))]
+        data_volume = data_volume
         print(f"data voluuuuuuuuuummmmmmmmmmmmmmmmmmeeee: {data_volume}")
     except:
         print("key errrrrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
@@ -1883,58 +1797,9 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
 def mtn_flexi_transaction(receiver, date, time, date_and_time, phone, amount, data_volume, details: dict, ref,
                           channel, txn_status):
     print(f"amounttttttttttttttttttt that came innnnnnnnnnnnnnnn: {amount}")
-    amount = round(float(amount))
-    prices_dict = {
-        4: 1000,
-        7: 2000,
-        8: 2000,
-        9: 2000,
-        10: 3000,
-        11: 3000,
-        12: 3000,
-        13: 4000,
-        14: 4000,
-        15: 4000,
-        17: 5000,
-        18: 5000,
-        19: 5000,
-        20: 6000,
-        21: 6000,
-        22: 7000,
-        23: 7000,
-        24: 7000,
-        25: 8000,
-        26: 8000,
-        27: 8000,
-        30: 10000,
-        31: 10000,
-        32: 10000,
-        33: 10000,
-        46: 15000,
-        47: 15000,
-        48: 15000,
-        62: 20000,
-        63: 20000,
-        64: 20000,
-        76: 25000,
-        77: 25000,
-        78: 25000,
-        92: 30000,
-        93: 30000,
-        94: 30000,
-        126: 40000,
-        127: 40000,
-        128: 40000,
-        153: 50000,
-        154: 50000,
-        155: 50000,
-        287: 100000,
-        289: 100000,
-        290: 100000,
-    }
 
     try:
-        look = prices_dict[float(amount)]
+        look = data_volume
         print(f"looooooooooooooooooooooooooooooooooooook: {look}")
     except:
         return Response(data={'code': '0000', 'message': "Transaction Saved"}, status=status.HTTP_200_OK)
@@ -1944,8 +1809,8 @@ def mtn_flexi_transaction(receiver, date, time, date_and_time, phone, amount, da
         'buyer': phone,
         'color_code': "Green",
         'amount': amount,
-        'data_break_down': str(prices_dict[float(amount)]),
-        'data_volume': prices_dict[float(amount)],
+        'data_break_down': str(data_volume),
+        'data_volume': data_volume,
         'date': date,
         'date_and_time': date_and_time,
         'done': "unknown",
@@ -2109,6 +1974,20 @@ def paystack_webhook(request):
                 time = metadata.get("time")
                 date_and_time = metadata.get("date_and_time")
                 txn_status = metadata.get("txn_status")
+
+                list_of_actual_amount = []
+                for i in range(5):
+                    list_of_actual_amount.append(round(paid_amount) - 1)
+                    list_of_actual_amount.append(round(paid_amount) + 1)
+                    list_of_actual_amount.append(round(paid_amount) - 2)
+                    list_of_actual_amount.append(round(paid_amount) + 2)
+                    list_of_actual_amount.append(round(paid_amount) - 3)
+                    list_of_actual_amount.append(round(paid_amount) + 3)
+
+                if not float(round(real_amount)) in list_of_actual_amount:
+                    return HttpResponse(status=200)
+                else:
+                    print("was fineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
                 user_details = get_user_details(user_id)
                 if user_details is not None:
