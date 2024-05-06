@@ -1976,7 +1976,7 @@ def paystack_webhook(request):
                 txn_status = metadata.get("txn_status")
 
                 list_of_actual_amount = []
-                for i in range(5):
+                for i in range(1):
                     list_of_actual_amount.append(round(paid_amount) - 1)
                     list_of_actual_amount.append(round(paid_amount) + 1)
                     list_of_actual_amount.append(round(paid_amount) - 2)
