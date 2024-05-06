@@ -1975,37 +1975,37 @@ def paystack_webhook(request):
                 date_and_time = metadata.get("date_and_time")
                 txn_status = metadata.get("txn_status")
 
-                list_of_actual_amount = []
-                for i in range(1):
-                    list_of_actual_amount.append(round(paid_amount) - 1)
-                    list_of_actual_amount.append(round(paid_amount) + 1)
-                    list_of_actual_amount.append(round(paid_amount) - 2)
-                    list_of_actual_amount.append(round(paid_amount) + 2)
-                    list_of_actual_amount.append(round(paid_amount) - 3)
-                    list_of_actual_amount.append(round(paid_amount) + 3)
-                    list_of_actual_amount.append(round(paid_amount) - 4)
-                    list_of_actual_amount.append(round(paid_amount) + 4)
-                    list_of_actual_amount.append(round(paid_amount) - 5)
-                    list_of_actual_amount.append(round(paid_amount) + 5)
-                    list_of_actual_amount.append(round(paid_amount) - 6)
-                    list_of_actual_amount.append(round(paid_amount) + 6)
-                    list_of_actual_amount.append(round(paid_amount) - 7)
-                    list_of_actual_amount.append(round(paid_amount) + 7)
-                    list_of_actual_amount.append(round(paid_amount) - 8)
-                    list_of_actual_amount.append(round(paid_amount) + 8)
-                    list_of_actual_amount.append(round(paid_amount) - 9)
-                    list_of_actual_amount.append(round(paid_amount) + 9)
-                    list_of_actual_amount.append(round(paid_amount) - 10)
-                    list_of_actual_amount.append(round(paid_amount) + 10)
-                    list_of_actual_amount.append(round(paid_amount))
-                print(list_of_actual_amount)
-                print(round(real_amount))
-
-                if not float(round(real_amount)) in list_of_actual_amount:
-                    print("was not finnnnnnnnnnnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-                    return HttpResponse(status=200)
-                else:
-                    print("was fineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                # list_of_actual_amount = []
+                # for i in range(1):
+                #     list_of_actual_amount.append(round(paid_amount) - 1)
+                #     list_of_actual_amount.append(round(paid_amount) + 1)
+                #     list_of_actual_amount.append(round(paid_amount) - 2)
+                #     list_of_actual_amount.append(round(paid_amount) + 2)
+                #     list_of_actual_amount.append(round(paid_amount) - 3)
+                #     list_of_actual_amount.append(round(paid_amount) + 3)
+                #     list_of_actual_amount.append(round(paid_amount) - 4)
+                #     list_of_actual_amount.append(round(paid_amount) + 4)
+                #     list_of_actual_amount.append(round(paid_amount) - 5)
+                #     list_of_actual_amount.append(round(paid_amount) + 5)
+                #     list_of_actual_amount.append(round(paid_amount) - 6)
+                #     list_of_actual_amount.append(round(paid_amount) + 6)
+                #     list_of_actual_amount.append(round(paid_amount) - 7)
+                #     list_of_actual_amount.append(round(paid_amount) + 7)
+                #     list_of_actual_amount.append(round(paid_amount) - 8)
+                #     list_of_actual_amount.append(round(paid_amount) + 8)
+                #     list_of_actual_amount.append(round(paid_amount) - 9)
+                #     list_of_actual_amount.append(round(paid_amount) + 9)
+                #     list_of_actual_amount.append(round(paid_amount) - 10)
+                #     list_of_actual_amount.append(round(paid_amount) + 10)
+                #     list_of_actual_amount.append(round(paid_amount))
+                # print(list_of_actual_amount)
+                # print(round(real_amount))
+                #
+                # if not float(round(real_amount)) in list_of_actual_amount:
+                #     print("was not finnnnnnnnnnnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                #     return HttpResponse(status=200)
+                # else:
+                #     print("was fineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
                 user_details = get_user_details(user_id)
                 if user_details is not None:
