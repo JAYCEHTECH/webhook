@@ -262,24 +262,34 @@ def big_time_transaction(receiver, date, time, date_and_time, phone, amount, dat
     prices_dict = {
         79: 30000,
         80: 30000,
+        98: 40000,
         99: 40000,
         100: 40000,
+        101: 40000,
+        118: 50000,
         119: 50000,
         120: 50000,
+        197: 80000,
+        198: 80000,
         199: 80000,
         200: 80000,
+        228: 100000,
         229: 100000,
         230: 100000,
+        231: 100000,
+        448: 200000,
         449: 200000,
         450: 200000,
+        1123: 500000,
         1124: 500000,
         1125: 500000,
+        2248: 1000000,
         2249: 1000000,
         2250: 1000000,
     }
 
     try:
-        data_volume = prices_dict[amount]
+        data_volume = prices_dict[round(float(amount))]
     except:
         print("key error")
         return HttpResponse(status=200)
