@@ -1983,8 +1983,11 @@ def paystack_webhook(request):
                     list_of_actual_amount.append(round(paid_amount) + 2)
                     list_of_actual_amount.append(round(paid_amount) - 3)
                     list_of_actual_amount.append(round(paid_amount) + 3)
+                print(list_of_actual_amount)
+                print(real_amount)
 
                 if not float(round(real_amount)) in list_of_actual_amount:
+                    print("was not finnnnnnnnnnnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                     return HttpResponse(status=200)
                 else:
                     print("was fineeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
