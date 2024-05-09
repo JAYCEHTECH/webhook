@@ -1727,13 +1727,6 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
     email = user_details['email']
     phone = user_details['phone']
 
-    try:
-        data_volume = data_volume
-        print(f"data voluuuuuuuuuummmmmmmmmmmmmmmmmmeeee: {data_volume}")
-    except:
-        print("key errrrrrrrrrrrrrrrrrrrrrorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-        return HttpResponse(status=200)
-
     doc_ref = history_web.collection(email).document(date_and_time)
 
     print("moving on")
@@ -2063,7 +2056,7 @@ def paystack_webhook(request):
                         if data.status_code == 200:
                             print("enetered into the 200000000000000000000000000000000000000000000000000")
                             gb_package = round(float(bundle_package / 1024))
-                            sms = f"Hey there\nYour account has been credited with {gb_package}GB.\nConfirm your new balance using the AT Mobile App"
+                            sms = f"Your AT account has been credited with {gb_package}GB."
                             r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
                             response = requests.request("GET", url=r_sms_url)
                             print(response.text)
