@@ -2032,7 +2032,7 @@ def paystack_webhook(request):
                                                                      amount=amount, receiver=receiver,
                                                                      reference=reference,
                                                                      paid_at=date_and_time,
-                                                                     txn_type="AT Premium Bundle",
+                                                                     txn_type="AT PREMIUM BUNDLE",
                                                                      color_code="Green", data_volume=bundle_package,
                                                                      ishare_balance=0, txn_status=txn_status)
                     print(f"send_response gave us =============================== {send_response}")
