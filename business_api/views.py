@@ -488,7 +488,7 @@ def initiate_mtn_transaction(request):
                     return Response({'message': 'Body parameters not valid. Check and try again.'},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-               prices_dict = {
+                prices_dict = {
                     1000: 4.8,
                     2000: 9.5,
                     3000: 14.0,
@@ -700,7 +700,7 @@ def admin_initiate_mtn_transaction(request):
                     return Response({'message': 'Body parameters not valid. Check and try again.'},
                                     status=status.HTTP_400_BAD_REQUEST)
 
-                  prices_dict = {
+                prices_dict = {
                     1000: 4.8,
                     2000: 9.5,
                     3000: 14.0,
