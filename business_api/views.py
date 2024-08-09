@@ -1945,6 +1945,10 @@ def paystack_webhook(request):
                 base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
                 print(base_url)
 
+                if models.Blacklist.objects.filter(phone_number=str(receiver)).exists():
+                    return Response({'message': 'Invalid Recipient.'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+
                 # if base_url != "https://reseller.cloudhubgh.com":
                 #     print("was not correct referrerrrrrrrrrrrrrrrrrrrrrr")
                 #     return HttpResponse(status=200)
@@ -2055,7 +2059,7 @@ def paystack_webhook(request):
 
                         if data.status_code == 200:
                             print("enetered into the 200000000000000000000000000000000000000000000000000")
-                            gb_package = round(float(bundle_package / 1024))
+                            gb_package = round(float(float(bundle_package) / 1024))
                             sms = f"Your AT account has been credited with {gb_package}GB."
                             r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
                             response = requests.request("GET", url=r_sms_url)

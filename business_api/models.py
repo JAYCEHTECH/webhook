@@ -20,3 +20,10 @@ class Transaction(models.Model):
     )
     transaction_type = models.CharField(max_length=250, choices=choices, null=True, blank=True)
     date = models.DateField(auto_now_add=True)
+
+
+class Blacklist(models.Model):
+    phone_number = models.CharField(max_length=200, null=False, blank=False)
+
+    def __str__(self):
+        return self.phone_number
