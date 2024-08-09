@@ -2059,6 +2059,8 @@ def paystack_webhook(request):
 
                         if data.status_code == 200:
                             print("enetered into the 200000000000000000000000000000000000000000000000000")
+                            print(bundle_package)
+                            print(type(bundle_package))
                             gb_package = round(float(float(bundle_package) / 1024))
                             sms = f"Your AT account has been credited with {gb_package}GB."
                             r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
