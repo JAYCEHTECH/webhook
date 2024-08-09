@@ -1945,10 +1945,6 @@ def paystack_webhook(request):
                 base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
                 print(base_url)
 
-                if models.Blacklist.objects.filter(phone_number=str(receiver)).exists():
-                    return Response({'message': 'Invalid Recipient.'},
-                                    status=status.HTTP_400_BAD_REQUEST)
-
                 # if base_url != "https://reseller.cloudhubgh.com":
                 #     print("was not correct referrerrrrrrrrrrrrrrrrrrrrrr")
                 #     return HttpResponse(status=200)
