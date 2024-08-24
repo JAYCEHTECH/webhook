@@ -2169,7 +2169,7 @@ def paystack_webhook(request):
                             print("number was not available in db")
                             receiver_details = get_user_details(user_id)
                             previous_receiver_wallet = receiver_details['wallet']
-                            new_balance_for_receiver = previous_receiver_wallet + real_amount
+                            new_balance_for_receiver = previous_receiver_wallet + float(real_amount)
                             print(f" new balance: {new_balance_for_receiver}")
                             receiver_doc_ref = user_collection.document(user_id)
                             receiver_doc_ref.update(
