@@ -2153,12 +2153,12 @@ def paystack_webhook(request):
                                 print("matches number in customner db")
                             else:
                                 print("did not match")
-                                return Response({"message": "Incorrect receiver"}, status=status.HTTP_400_BAD_REQUEST)
+                                return HttpResponse(status=200)
                             print("number was available in the search")
                             pass
                         else:
                             print("number was not available in db")
-                            return Response({"message": "Incorrect receiver"}, status=status.HTTP_400_BAD_REQUEST)
+                            return HttpResponse(status=200)
                     else:
                         print("not active")
                     user_details = get_user_details(user_id)
