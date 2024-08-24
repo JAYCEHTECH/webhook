@@ -49,6 +49,8 @@ history_web = database.collection(u'History Web').document('all_users')
 
 totals_collection = database.collection('Totals')
 admin_collection = database.collection('Admin')
+allowed_users_collection_name = 'customer_database'
+allowed_users_doc_ref = database.collection(allowed_users_collection_name)
 
 
 class BearerTokenAuthentication(TokenAuthentication):
@@ -2140,6 +2142,25 @@ def paystack_webhook(request):
                             doc_ref.update({'done': 'Failed'})
                             return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
+                    if models.MTNToggle.objects.filter().first().allowed_active:
+                        print("activvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        doc_0 = allowed_users_doc_ref.document(str(receiver))
+                        doc = doc_0.get()
+                        if doc.exists:
+                            doc_to_dict = doc.to_dict()
+                            print(doc_to_dict)
+                            if str(doc_to_dict['number'] == str(receiver)):
+                                print("matches number in customner db")
+                            else:
+                                print("did not match")
+                                return Response({"message": "Incorrect receiver"}, status=status.HTTP_400_BAD_REQUEST)
+                            print("number was available in the search")
+                            pass
+                        else:
+                            print("number was not available in db")
+                            return Response({"message": "Incorrect receiver"}, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        print("not active")
                     user_details = get_user_details(user_id)
                     if user_details is not None:
                         first_name = user_details['first name']

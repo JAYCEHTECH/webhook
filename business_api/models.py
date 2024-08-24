@@ -27,3 +27,12 @@ class Blacklist(models.Model):
 
     def __str__(self):
         return self.phone_number
+
+
+class MTNToggle(models.Model):
+    mtn_active = models.BooleanField(default=True)
+    allowed_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.mtn_active}"
+
