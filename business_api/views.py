@@ -2161,6 +2161,40 @@ def paystack_webhook(request):
                                     {'wallet': new_balance_for_receiver, 'wallet_last_update': date_and_time,
                                      'recent_wallet_reference': reference})
                                 print(receiver_doc_ref.get().to_dict())
+                                date = datetime.datetime.now().strftime("%a, %b %d, %Y")
+                                time = datetime.datetime.now().strftime("%I:%M:%S %p")
+                                date_and_time = datetime.datetime.now().isoformat()
+
+                                all_data = {
+                                    'batch_id': "unknown",
+                                    'buyer': user_details['phone'],
+                                    'color_code': "Green",
+                                    'amount': amount,
+                                    'data_break_down': amount,
+                                    'data_volume': amount,
+                                    'date': date,
+                                    'date_and_time': date_and_time,
+                                    'done': "Success",
+                                    'email': email,
+                                    'image': user_id,
+                                    'ishareBalance': 0,
+                                    'name': f"{first_name}",
+                                    'number': receiver_details['phone'],
+                                    'paid_at': date_and_time,
+                                    'reference': reference,
+                                    'responseCode': 200,
+                                    'status': "Credited",
+                                    'time': time,
+                                    'tranxId': str(tranx_id_generator()),
+                                    'type': "WALLETTOPUP",
+                                    'uid': user_id
+                                }
+                                history_web.collection(email).document(date_and_time).set(all_data)
+                                print("f saved")
+                                history_collection.document(date_and_time).set(all_data)
+                                print(f"ya{history_collection.document(date_and_time).get().to_dict()}")
+                                print("f saved")
+                                print(f"yo{history_web.collection(email).document(date_and_time).get().to_dict()}")
                                 print("did not match")
                                 return HttpResponse(status=200)
                             print("number was available in the search")
@@ -2176,6 +2210,40 @@ def paystack_webhook(request):
                                 {'wallet': new_balance_for_receiver, 'wallet_last_update': date_and_time,
                                  'recent_wallet_reference': reference})
                             print(receiver_doc_ref.get().to_dict())
+                            date = datetime.datetime.now().strftime("%a, %b %d, %Y")
+                            time = datetime.datetime.now().strftime("%I:%M:%S %p")
+                            date_and_time = datetime.datetime.now().isoformat()
+
+                            all_data = {
+                                'batch_id': "unknown",
+                                'buyer': user_details['phone'],
+                                'color_code': "Green",
+                                'amount': amount,
+                                'data_break_down': amount,
+                                'data_volume': amount,
+                                'date': date,
+                                'date_and_time': date_and_time,
+                                'done': "Success",
+                                'email': email,
+                                'image': user_id,
+                                'ishareBalance': 0,
+                                'name': f"{first_name}",
+                                'number': receiver_details['phone'],
+                                'paid_at': date_and_time,
+                                'reference': reference,
+                                'responseCode': 200,
+                                'status': "Credited",
+                                'time': time,
+                                'tranxId': str(tranx_id_generator()),
+                                'type': "WALLETTOPUP",
+                                'uid': user_id
+                            }
+                            history_web.collection(email).document(date_and_time).set(all_data)
+                            print("f saved")
+                            history_collection.document(date_and_time).set(all_data)
+                            print(f"ya{history_collection.document(date_and_time).get().to_dict()}")
+                            print("f saved")
+                            print(f"yo{history_web.collection(email).document(date_and_time).get().to_dict()}")
                             return HttpResponse(status=200)
                     else:
                         print("not active")
