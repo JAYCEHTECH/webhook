@@ -111,35 +111,64 @@ def get_user_details(user_id):
 
 def send_ishare_bundle(first_name: str, last_name: str, buyer, receiver: str, email: str, bundle: float
                        ):
-    url = "https://backend.boldassure.net:445/live/api/context/business/transaction/new-transaction"
+    import uuid
+    transaction_reference = f"TXN-{uuid.uuid4().hex[:8].upper()}"
 
-    payload = json.dumps({
-        "accountNo": buyer,
-        "accountFirstName": first_name,
-        "accountLastName": last_name,
-        "accountMsisdn": receiver,
-        "accountEmail": email,
-        "accountVoiceBalance": 0,
-        "accountDataBalance": bundle,
-        "accountCashBalance": 0,
-        "active": True
-    })
+    url = "https://api.hubnet.app/send"
 
-    token = bearer_token_collection.document("Active_API_BoldAssure")
-    token_doc = token.get()
-    token_doc_dict = token_doc.to_dict()
-    tokennn = token_doc_dict['ishare_bearer']
-    print(tokennn)
-
+    # Header with the API key
     headers = {
-        'Authorization': tokennn,
-        'Content-Type': 'application/json'
+        "X-HUBNET-KEY": config("HUBNET_KEY"),
     }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
-    print(
-        f"{response.json()} from first method +++++++++++++++++++++++++++++++++++++==========================================")
+    # Payload with transaction details
+    payload = {
+        "transaction_id": transaction_reference,
+        "volume": str(int(bundle)),
+        "recipient": str(receiver)
+    }
+
+    # Make the POST request
+    response = requests.post(url, headers=headers, json=payload)
+    data = response.json()
+    print(data)
+
+    if response.status_code == 200:
+        print("Request successful:", response.json())
+    else:
+        print("Request failed with status code:", response.status_code)
+        print("Response:", response.text)
+
     return response
+    # url = "https://backend.boldassure.net:445/live/api/context/business/transaction/new-transaction"
+    #
+    # payload = json.dumps({
+    #     "accountNo": buyer,
+    #     "accountFirstName": first_name,
+    #     "accountLastName": last_name,
+    #     "accountMsisdn": receiver,
+    #     "accountEmail": email,
+    #     "accountVoiceBalance": 0,
+    #     "accountDataBalance": bundle,
+    #     "accountCashBalance": 0,
+    #     "active": True
+    # })
+    #
+    # token = bearer_token_collection.document("Active_API_BoldAssure")
+    # token_doc = token.get()
+    # token_doc_dict = token_doc.to_dict()
+    # tokennn = token_doc_dict['ishare_bearer']
+    # print(tokennn)
+    #
+    # headers = {
+    #     'Authorization': tokennn,
+    #     'Content-Type': 'application/json'
+    # }
+    #
+    # response = requests.request("POST", url, headers=headers, data=payload)
+    # print(
+    #     f"{response.json()} from first method +++++++++++++++++++++++++++++++++++++==========================================")
+    # return response
 
 
 def ishare_verification(batch_id):
@@ -214,16 +243,12 @@ def send_and_save_to_history(user_id,
     json_response = ishare_response.json()
     print(f"hello:{json_response}")
     print(ishare_response.status_code)
-    try:
-        batch_id = json_response["batchId"]
-    except KeyError:
-        batch_id = None
-    print(batch_id)
+    response_code = json_response["data"]["response_code"]
 
     doc_ref = history_collection.document(date_and_time)
-    doc_ref.update({'batch_id': batch_id, 'responseCode': ishare_response.status_code})
+    doc_ref.update({'batch_id': "Null", 'responseCode': response_code})
     history_web.collection(email).document(date_and_time).update(
-        {'batch_id': batch_id, 'responseCode': ishare_response.status_code})
+        {'batch_id': "Null", 'responseCode': response_code})
     # data = {
     #     'batch_id': batch_id,
     #     'buyer': phone,
@@ -1770,18 +1795,13 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
     print(
         f"hello:{json_response}========================================================================================")
     status_code = ishare_response.status_code
-    print(status_code)
-    try:
-        batch_id = json_response["batchId"]
-    except KeyError:
-        batch_id = "unknown"
-    print(batch_id)
+    response_code = json_response["data"]["response_code"]
 
     doc_ref = history_collection.document(date_and_time)
     if doc_ref.get().exists:
-        doc_ref.update({'batch_id': batch_id, 'responseCode': status_code})
+        doc_ref.update({'batch_id': "Null", 'responseCode': response_code})
         history_web.collection(email).document(date_and_time).update(
-            {'batch_id': batch_id, 'responseCode': status_code})
+            {'batch_id': "Null", 'responseCode': response_code})
     else:
         print("didn't find any entry to update")
     print("firebase saved")
@@ -2043,107 +2063,99 @@ def paystack_webhook(request):
                     print(data)
                     json_response = data.json()
                     print(json_response)
-                    if data.status_code != 200:
-                        print("Stopped here")
-                        return HttpResponse(status=500)
-                    else:
-                        print(send_response.status_code)
-                        try:
-                            batch_id = json_response["batchId"]
-                        except KeyError:
-                            return HttpResponse(status=200)
+                    response_code = json_response["data"]["response_code"]
 
-                        print(batch_id)
-
-                        if data.status_code == 200:
-                            print("enetered into the 200000000000000000000000000000000000000000000000000")
-                            print(bundle_package)
-                            print(type(bundle_package))
-                            gb_package = round(float(float(bundle_package) / 1024))
-                            sms = f"Your AT account has been credited with {gb_package}GB."
-                            r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
-                            response = requests.request("GET", url=r_sms_url)
-                            print(response.text)
-                            doc_ref = history_collection.document(date_and_time)
-                            if doc_ref.get().exists:
-                                doc_ref.update({'done': 'Successful'})
-                            else:
-                                print("no entry")
-                            mail_doc_ref = mail_collection.document(f"{batch_id}-Mail")
-                            file_path = 'business_api/mail.txt'  # Replace with your file path
-
-                            # tot = user_collection.document(user_id)
-                            # print(tot.get().to_dict())
-                            # try:
-                            #     print(tot.get().to_dict()['at_total_sales'])
-                            #     previous_sale = tot.get().to_dict()['at_total_sales']
-                            #     print(f"Previous Sale: {previous_sale}")
-                            #     new_sale = float(previous_sale) + float(amount)
-                            #     print(new_sale)
-                            #     user_collection.document(user_id).update({'at_total_sales': new_sale})
-                            # except:
-                            #     user_collection.document(user_id).update({'at_total_sales': amount})
-
-                            # tat = cashback_collection.document(user_id)
-                            # print(tat.get().to_dict())
-                            #
-                            # try:
-                            #     previous_cashback = tat.get().to_dict()['cashback_wallet']
-                            #     print(previous_cashback)
-                            #     cashback_balance = (0.5 / 100) * float(amount)
-                            #     print(cashback_balance)
-                            #     new_cashback = float(previous_cashback) + float(cashback_balance)
-                            #     print(new_cashback)
-                            #     cashback_collection.document(user_id).update(
-                            #         {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
-                            #
-                            # except TypeError as e:
-                            #     print(e)
-                            #     cashback_balance = (0.5 / 100) * float(amount)
-                            #     print(cashback_balance)
-                            #     cashback_collection.document(user_id).set(
-                            #         {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
-                            #
-                            #     print(cashback_collection.document(user_id).get().to_dict())
-                            #     print("did")
-
-                            name = first_name
-                            volume = bundle_package
-                            date = date_and_time
-                            reference_t = reference
-                            receiver_t = receiver
-
-                            with open(file_path, 'r') as file:
-                                html_content = file.read()
-
-                            placeholders = {
-                                '{name}': name,
-                                '{volume}': volume,
-                                '{date}': date,
-                                '{reference}': reference_t,
-                                '{receiver}': receiver_t
-                            }
-
-                            for placeholder, value in placeholders.items():
-                                html_content = html_content.replace(placeholder, str(value))
-
-                            mail_doc_ref.set({
-                                'to': email,
-                                'message': {
-                                    'subject': 'AT Flexi Bundle',
-                                    'html': html_content,
-                                    'messageId': 'CloudHub GH'
-                                }
-                            })
-                            print("donneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-                            return HttpResponse(status=200)
+                    if response_code == "200":
+                        print("enetered into the 200000000000000000000000000000000000000000000000000")
+                        print(bundle_package)
+                        print(type(bundle_package))
+                        gb_package = round(float(float(bundle_package) / 1024))
+                        sms = f"Your AT account has been credited with {gb_package}GB."
+                        r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
+                        response = requests.request("GET", url=r_sms_url)
+                        print(response.text)
+                        doc_ref = history_collection.document(date_and_time)
+                        if doc_ref.get().exists:
+                            doc_ref.update({'done': 'Successful'})
                         else:
-                            doc_ref = history_collection.document(date_and_time)
-                            doc_ref.update({'done': 'Failed'})
-                            return HttpResponse(status=200)
+                            print("no entry")
+                        mail_doc_ref = mail_collection.document(f"{reference}-Mail")
+                        file_path = 'business_api/mail.txt'  # Replace with your file path
+
+                        # tot = user_collection.document(user_id)
+                        # print(tot.get().to_dict())
+                        # try:
+                        #     print(tot.get().to_dict()['at_total_sales'])
+                        #     previous_sale = tot.get().to_dict()['at_total_sales']
+                        #     print(f"Previous Sale: {previous_sale}")
+                        #     new_sale = float(previous_sale) + float(amount)
+                        #     print(new_sale)
+                        #     user_collection.document(user_id).update({'at_total_sales': new_sale})
+                        # except:
+                        #     user_collection.document(user_id).update({'at_total_sales': amount})
+
+                        # tat = cashback_collection.document(user_id)
+                        # print(tat.get().to_dict())
+                        #
+                        # try:
+                        #     previous_cashback = tat.get().to_dict()['cashback_wallet']
+                        #     print(previous_cashback)
+                        #     cashback_balance = (0.5 / 100) * float(amount)
+                        #     print(cashback_balance)
+                        #     new_cashback = float(previous_cashback) + float(cashback_balance)
+                        #     print(new_cashback)
+                        #     cashback_collection.document(user_id).update(
+                        #         {'cashback_wallet': new_cashback, 'phone_number': user_details['phone']})
+                        #
+                        # except TypeError as e:
+                        #     print(e)
+                        #     cashback_balance = (0.5 / 100) * float(amount)
+                        #     print(cashback_balance)
+                        #     cashback_collection.document(user_id).set(
+                        #         {'cashback_wallet': cashback_balance, 'phone_number': user_details['phone']})
+                        #
+                        #     print(cashback_collection.document(user_id).get().to_dict())
+                        #     print("did")
+
+                        name = first_name
+                        volume = bundle_package
+                        date = date_and_time
+                        reference_t = reference
+                        receiver_t = receiver
+
+                        with open(file_path, 'r') as file:
+                            html_content = file.read()
+
+                        placeholders = {
+                            '{name}': name,
+                            '{volume}': volume,
+                            '{date}': date,
+                            '{reference}': reference_t,
+                            '{receiver}': receiver_t
+                        }
+
+                        for placeholder, value in placeholders.items():
+                            html_content = html_content.replace(placeholder, str(value))
+
+                        mail_doc_ref.set({
+                            'to': email,
+                            'message': {
+                                'subject': 'AT Flexi Bundle',
+                                'html': html_content,
+                                'messageId': 'CloudHub GH'
+                            }
+                        })
+                        print(
+                            "donneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        return HttpResponse(status=200)
+                    else:
+                        doc_ref = history_collection.document(date_and_time)
+                        doc_ref.update({'done': 'Failed'})
+                        return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
                     if models.MTNToggle.objects.filter().first().allowed_active:
-                        print("activvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        print(
+                            "activvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         doc_0 = allowed_users_doc_ref.document(str(receiver))
                         doc = doc_0.get()
                         if doc.exists:
@@ -2270,7 +2282,8 @@ def paystack_webhook(request):
                                                          txn_status=txn_status)
                     print("after mtn responses")
                     if mtn_response.status_code == 200 or mtn_response.data["code"] == "0000":
-                        print("mtn donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        print(
+                            "mtn donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print("yooo")
                         #
                         # tot = user_collection.document(user_id)
@@ -2332,7 +2345,8 @@ def paystack_webhook(request):
                                                              channel="MoMo", phone=phone, ref=reference,
                                                              details=details, txn_status=txn_status, user_id=user_id)
                     if big_time_response.status_code == 200 or big_time_response.data["code"] == "0000":
-                        print("big time donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        print(
+                            "big time donnnneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         return HttpResponse(status=200)
                     else:
                         return HttpResponse(status=200)
