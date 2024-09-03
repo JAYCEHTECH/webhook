@@ -1799,9 +1799,9 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
 
     doc_ref = history_collection.document(date_and_time)
     if doc_ref.get().exists:
-        doc_ref.update({'batch_id': "Null", 'responseCode': response_code})
+        doc_ref.update({'batch_id': reference, 'responseCode': response_code})
         history_web.collection(email).document(date_and_time).update(
-            {'batch_id': "Null", 'responseCode': response_code})
+            {'batch_id': reference, 'responseCode': response_code})
     else:
         print("didn't find any entry to update")
     print("firebase saved")
@@ -2150,7 +2150,9 @@ def paystack_webhook(request):
                         return HttpResponse(status=200)
                     else:
                         doc_ref = history_collection.document(date_and_time)
-                        doc_ref.update({'done': 'Failed'})
+                        doc_ref.update({'done': 'Failed', 'status': 'Failed'})
+                        history_web.collection(email).document(date_and_time).update(
+                            {'batch_id': reference, 'responseCode': response_code, 'status': 'Failed'})
                         return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
                     if models.MTNToggle.objects.filter().first().allowed_active:
