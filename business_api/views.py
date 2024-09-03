@@ -2071,7 +2071,7 @@ def paystack_webhook(request):
                         print(type(bundle_package))
                         gb_package = round(float(float(bundle_package) / 1024))
                         sms = f"Your AT account has been credited with {gb_package}GB."
-                        r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=CloudHub GH&sms={sms}"
+                        r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=Bundle&sms={sms}"
                         response = requests.request("GET", url=r_sms_url)
                         print(response.text)
                         doc_ref = history_collection.document(date_and_time)
