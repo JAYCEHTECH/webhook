@@ -114,22 +114,22 @@ def send_ishare_bundle(first_name: str, last_name: str, buyer, receiver: str, em
     import uuid
     transaction_reference = f"TXN-{uuid.uuid4().hex[:8].upper()}"
 
-    url = "https://api.hubnet.app/send"
+    url = "https://console.hubnet.app/live/api/context/business/transaction/at-new-transaction"
 
-    # Header with the API key
-    headers = {
-        "X-HUBNET-KEY": config("HUBNET_KEY"),
-    }
-
-    # Payload with transaction details
-    payload = {
-        "transaction_id": transaction_reference,
+    payload = json.dumps({
+        "phone": str(receiver),
         "volume": str(int(bundle)),
-        "recipient": str(receiver)
+        "reference": transaction_reference
+    })
+
+    headers = {
+        'token': config("HUBNET_KEYY"),
+        'Content-Type': 'application/json'
     }
 
-    # Make the POST request
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    print(response.text)
     data = response.json()
     print(data)
 
