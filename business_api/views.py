@@ -2090,11 +2090,17 @@ def paystack_webhook(request):
                         r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=Bundle&sms={sms}"
                         response = requests.request("GET", url=r_sms_url)
                         print(response.text)
-                        doc_ref = history_collection.document(date_and_time)
-                        if doc_ref.get().exists:
-                            doc_ref.update({'done': 'Successful', 'status': 'Delivered'})
-                            ishare_tranx.document(date_and_time).update(
-                                {'responseCode': response_code, 'batch_id': reference, 'status': 'Delivered'})
+                        try:
+                            doc_ref = history_collection.document(date_and_time)
+                            if doc_ref.get().exists:
+                                doc_ref.update({'done': 'Successful', 'status': 'Delivered'})
+                                ishare_tranx.document(date_and_time).update(
+                                    {'responseCode': response_code, 'batch_id': reference, 'status': 'Delivered'})
+                        except Exception as e:
+                            print(e)
+                            return Response(
+                                data={'status_code': send_response.status_code, "message": "Bad Response from API"},
+                                status=status.HTTP_400_BAD_REQUEST)
                         else:
                             print("no entry")
                         mail_doc_ref = mail_collection.document(f"{reference}-Mail")
