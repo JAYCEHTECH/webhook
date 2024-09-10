@@ -110,7 +110,7 @@ def get_user_details(user_id):
         return None
 
 
-def send_ishare_bundle(first_name: str, last_name: str, buyer, receiver: str, email: str, bundle: float
+def send_ishare_bundle(first_name: str, last_name: str, buyer, receiver: str, email: str, bundle: float, reference:str
                        ):
     import uuid
     transaction_reference = f"TXN-{uuid.uuid4().hex[:8].upper()}"
@@ -120,7 +120,7 @@ def send_ishare_bundle(first_name: str, last_name: str, buyer, receiver: str, em
     payload = json.dumps({
         "phone": str(receiver),
         "volume": str(int(bundle)),
-        "reference": transaction_reference
+        "reference": reference
     })
 
     headers = {
@@ -1800,7 +1800,7 @@ def webhook_send_and_save_to_history(user_id, txn_type: str, paid_at: str, ishar
     ishare_response = send_ishare_bundle(first_name=first_name, last_name=last_name, receiver=receiver,
                                          buyer=phone,
                                          bundle=data_volume,
-                                         email=email)
+                                         email=email, reference=reference)
     json_response = ishare_response.json()
     print(
         f"hello:{json_response}========================================================================================")
@@ -2173,12 +2173,15 @@ def paystack_webhook(request):
                             "donneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         return HttpResponse(status=200)
                     else:
-                        doc_ref = history_collection.document(date_and_time)
-                        doc_ref.update({'done': 'Failed', 'status': 'Failed'})
-                        history_web.collection(email).document(date_and_time).update(
-                            {'batch_id': reference, 'responseCode': response_code, 'status': 'Failed'})
-                        ishare_tranx.document(date_and_time).update(
-                            {'responseCode': response_code, 'batch_id': reference, 'status': 'Failed'})
+                        try:
+                            doc_ref = history_collection.document(date_and_time)
+                            doc_ref.update({'done': 'Failed', 'status': 'Failed'})
+                            history_web.collection(email).document(date_and_time).update(
+                                {'batch_id': reference, 'responseCode': response_code, 'status': 'Failed'})
+                            ishare_tranx.document(date_and_time).update(
+                                {'responseCode': response_code, 'batch_id': reference, 'status': 'Failed'})
+                        except Exception as e:
+                            print(e)
                         return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
                     if models.MTNToggle.objects.filter().first().allowed_active:
