@@ -44,6 +44,7 @@ mtn_history = database.collection('MTN_Admin_History')
 mtn_tranx = mtn_history.document('mtnTransactions')
 big_time = mtn_tranx.collection('big_time')
 mtn_other = mtn_tranx.collection('mtnOther')
+ishare_tranx = mtn_tranx.collection('ishare')
 bearer_token_collection = database.collection("_KeysAndBearer")
 history_web = database.collection(u'History Web').document('all_users')
 
@@ -224,7 +225,7 @@ def send_and_save_to_history(user_id,
         'paid_at': date_and_time,
         'reference': reference,
         'responseCode': "0",
-        'status': "Delivered",
+        'status': "Pending",
         'time': time,
         'tranxId': str(tranx_id_generator()),
         'type': "AT PREMIUM BUNDLE",
@@ -233,6 +234,7 @@ def send_and_save_to_history(user_id,
     }
     history_collection.document(date_and_time).set(data)
     history_web.collection(email).document(date_and_time).set(data)
+    ishare_tranx.document(date_and_time).set(data)
 
     print("first save")
 
@@ -243,12 +245,20 @@ def send_and_save_to_history(user_id,
     json_response = ishare_response.json()
     print(f"hello:{json_response}")
     print(ishare_response.status_code)
-    response_code = json_response["data"]["response_code"]
+
+    try:
+        response_code = json_response["data"]["response_code"]
+    except Exception as e:
+        print(e)
+        return Response(
+            data={'status_code': ishare_response.status_code, "message": "Bad Response from API"},
+            status=status.HTTP_400_BAD_REQUEST)
 
     doc_ref = history_collection.document(date_and_time)
     doc_ref.update({'batch_id': "Null", 'responseCode': response_code})
     history_web.collection(email).document(date_and_time).update(
         {'batch_id': "Null", 'responseCode': response_code})
+    ishare_tranx.document(date_and_time).update({'responseCode': response_code, 'batch_id': reference})
     # data = {
     #     'batch_id': batch_id,
     #     'buyer': phone,
@@ -2063,7 +2073,13 @@ def paystack_webhook(request):
                     print(data)
                     json_response = data.json()
                     print(json_response)
-                    response_code = json_response["data"]["response_code"]
+                    try:
+                        response_code = json_response["data"]["response_code"]
+                    except Exception as e:
+                        print(e)
+                        return Response(
+                            data={'status_code': send_response.status_code, "message": "Bad Response from API"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
                     if response_code == "200":
                         print("enetered into the 200000000000000000000000000000000000000000000000000")
@@ -2076,7 +2092,9 @@ def paystack_webhook(request):
                         print(response.text)
                         doc_ref = history_collection.document(date_and_time)
                         if doc_ref.get().exists:
-                            doc_ref.update({'done': 'Successful'})
+                            doc_ref.update({'done': 'Successful', 'status': 'Delivered'})
+                            ishare_tranx.document(date_and_time).update(
+                                {'responseCode': response_code, 'batch_id': reference, 'status': 'Delivered'})
                         else:
                             print("no entry")
                         mail_doc_ref = mail_collection.document(f"{reference}-Mail")
@@ -2153,6 +2171,8 @@ def paystack_webhook(request):
                         doc_ref.update({'done': 'Failed', 'status': 'Failed'})
                         history_web.collection(email).document(date_and_time).update(
                             {'batch_id': reference, 'responseCode': response_code, 'status': 'Failed'})
+                        ishare_tranx.document(date_and_time).update(
+                            {'responseCode': response_code, 'batch_id': reference, 'status': 'Failed'})led'})
                         return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
                     if models.MTNToggle.objects.filter().first().allowed_active:
