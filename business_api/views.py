@@ -2172,7 +2172,7 @@ def paystack_webhook(request):
                         history_web.collection(email).document(date_and_time).update(
                             {'batch_id': reference, 'responseCode': response_code, 'status': 'Failed'})
                         ishare_tranx.document(date_and_time).update(
-                            {'responseCode': response_code, 'batch_id': reference, 'status': 'Failed'})led'})
+                            {'responseCode': response_code, 'batch_id': reference, 'status': 'Failed'})
                         return HttpResponse(status=200)
                 elif channel == "mtn_flexi":
                     if models.MTNToggle.objects.filter().first().allowed_active:
