@@ -225,7 +225,7 @@ def send_and_save_to_history(user_id,
         'paid_at': date_and_time,
         'reference': reference,
         'responseCode': "0",
-        'status': "Pending",
+        'status': "Delivered",
         'time': time,
         'tranxId': str(tranx_id_generator()),
         'type': "AT PREMIUM BUNDLE",
@@ -255,9 +255,9 @@ def send_and_save_to_history(user_id,
             status=status.HTTP_400_BAD_REQUEST)
 
     doc_ref = history_collection.document(date_and_time)
-    doc_ref.update({'batch_id': "Null", 'responseCode': response_code})
+    doc_ref.update({'batch_id': reference, 'responseCode': response_code})
     history_web.collection(email).document(date_and_time).update(
-        {'batch_id': "Null", 'responseCode': response_code})
+        {'batch_id': reference, 'responseCode': response_code})
     ishare_tranx.document(date_and_time).update({'responseCode': response_code, 'batch_id': reference})
     # data = {
     #     'batch_id': batch_id,
