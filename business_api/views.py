@@ -2052,10 +2052,10 @@ def paystack_webhook(request):
                     )
                     new_transaction.save()
 
-                sms_message = f"Payment of GHS {paid_amount} received at CloudHub. \nReceipt: {reference}\n\nThank You!"
-                sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={phone}&from=CloudHub GH&sms={sms_message}"
-                response = requests.request("GET", url=sms_url)
-                print(response.status_code)
+                #sms_message = f"Payment of GHS {paid_amount} received at CloudHub. \nReceipt: {reference}\n\nThank You!"
+                #sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={phone}&from=CloudHub GH&sms={sms_message}"
+                #response = requests.request("GET", url=sms_url)
+                #print(response.status_code)
 
                 if channel == "ishare":
                     send_response = webhook_send_and_save_to_history(user_id=user_id, date_and_time=date_and_time,
@@ -2088,8 +2088,8 @@ def paystack_webhook(request):
                         gb_package = round(float(float(bundle_package) / 1024))
                         sms = f"Your AT account has been credited with {gb_package}GB."
                         r_sms_url = f"https://sms.arkesel.com/sms/api?action=send-sms&api_key=UmpEc1JzeFV4cERKTWxUWktqZEs&to={receiver}&from=Bundle&sms={sms}"
-                        response = requests.request("GET", url=r_sms_url)
-                        print(response.text)
+                        #response = requests.request("GET", url=r_sms_url)
+                        #print(response.text)
                         try:
                             doc_ref = history_collection.document(date_and_time)
                             if doc_ref.get().exists:
